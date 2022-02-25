@@ -1,17 +1,16 @@
 import React,{useEffect, useState} from "react";
 import { Button,Row,Col, Container } from "react-bootstrap";
-import { TicketTable } from "../../components/table/ticket/TicketTable";
-import tickets from '../../assets/data/dummy-ticket.json'
-import { FilterForm } from "../../components/form/ticket/FilterForm";
+import { NoteTable } from "../../components/table/note/NoteTable";
+import notes from '../../assets/data/note.json'
+import { FilterForm } from "../../components/form/note/FilterForm";
 import Page from "../../components/Page";
 
-const TicketPage = () => {
+const NotePage = () => {
 
-    const [data,setData] = useState(tickets);
+    const [data,setData] = useState(notes);
     const [searchStr,setSearchStr] = useState();
 
     useEffect(() => {},[searchStr,data]);
-
 
     const handleOnChangeSearch = e => {
         const {name,value} = e.target;
@@ -21,9 +20,9 @@ const TicketPage = () => {
         }
     }
     const searchWithFilter = (value) => {
-        const filteredSubjectTickets = tickets.filter(row=>row.subject.toLowerCase().includes(value.toLowerCase()));
-        const filteredIssueTickets = tickets.filter(row=>row.issue.toLowerCase().includes(value.toLowerCase()));
-        const filteredData = [...filteredIssueTickets,...filteredSubjectTickets];
+        const filteredSubjectTickets = notes.filter(row=>row.subject.toLowerCase().includes(value.toLowerCase()));
+        const filteredDetailTickets = notes.filter(row=>row.detail.toLowerCase().includes(value.toLowerCase()));
+        const filteredData = [...filteredDetailTickets,...filteredSubjectTickets];
 
         const processedData = filteredData.filter((v,i,a)=>a.findIndex(t=>(t.id===v.id))===i)
 
@@ -35,11 +34,11 @@ const TicketPage = () => {
     }
 
     return (
-        <Page title="Tickets">
+        <Page title="Notes">
                 <FilterForm/>
-                <TicketTable data={data} handleOnChangeSearch={handleOnChangeSearch} />
+                <NoteTable data={data} handleOnChangeSearch={handleOnChangeSearch} />
         </Page>
     )  
 };
 
-export default TicketPage;
+export default NotePage;

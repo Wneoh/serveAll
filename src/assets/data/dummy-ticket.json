@@ -3,7 +3,7 @@
         "id" : 1,
         "client": "James",
         "subject": "maintance",
-        "handledBy": "Jennifer",
+        "handledBy": 1,
         "issue": "Having problem with ticket",
         "date" : "01/10/2020",
         "status" : "pending",
@@ -29,7 +29,7 @@
         "id" : 2,
         "client": "James",
         "subject": "maintance",
-        "handledBy": "Jennifer",
+        "handledBy": 1,
         "date" : "01/10/2020",
         "issue": "Having problem with ticket",
         "status" : "pending",
@@ -55,7 +55,7 @@
         "id" : 3,
         "client": "James",
         "subject": "maintance",
-        "handledBy": "Jennifer",
+        "handledBy": 1,
         "date" : "01/10/2020",
         "issue": "Having problem with ticket",
         "status" : "pending",
@@ -66,12 +66,12 @@
                 "responseBy" : "client"
             },
             {
-                "date" : "20-10-10",
+                "date" : "2021-01-21",
                 "response" : "ok haha",
                 "responseBy" : "staff"
             },
             {
-                "date" : "20-10-10",
+                "date" : "2021-01-21",
                 "response" : "thanks haha",
                 "responseBy" : "client"
             }
@@ -81,23 +81,23 @@
         "id" : 4,
         "client": "James",
         "subject": "maintance",
-        "handledBy": "Jennifer",
-        "date" : "01/10/2020",
+        "handledBy": 1,
+        "date" : "2021-01-21",
         "issue": "Having problem with ticket",
         "status" : "pending",
         "history": [
             {
-                "date" : "20-10-10",
+                "date" : "2021-01-21",
                 "response" : "mesage haha",
                 "responseBy" : "client"
             },
             {
-                "date" : "20-10-10",
+                "date" : "2021-01-21",
                 "response" : "ok haha",
                 "responseBy" : "staff"
             },
             {
-                "date" : "20-10-10",
+                "date" : "2021-01-21",
                 "response" : "thanks haha",
                 "responseBy" : "client"
             }
