@@ -1,6 +1,6 @@
 import React from 'react'
 import { Container,Row,Col,Form,Button } from 'react-bootstrap'
-export const AddNoteForm = ({isAddMode,id,subject,error,handledBy,detail,date,handleOnChange,handleSubmit}) => {
+export const AddNoteForm = ({changeViewToList,isAddMode,id,subject,error,handledBy,detail,date,handleOnChange,handleSubmit}) => {
   return (
     <Container>
           <Row>
@@ -71,7 +71,7 @@ export const AddNoteForm = ({isAddMode,id,subject,error,handledBy,detail,date,ha
                     </Form>
                     </Col>
                     <Col sm={12} >
-                        <a href="/note" className="pt-2">
+                        <a style={{cursor:"pointer"}} onClick={changeViewToList} className="pt-2">
                             <small>Back</small>
                         </a>
                     </Col>

@@ -5,9 +5,9 @@ import notes from '../../assets/data/note.json'
 import "./addNotePage.style.css";
 import { useParams } from "react-router-dom";
 
-export const AddNotePage = () => {
+export const AddNotePage = ({id,changeViewToList}) => {
 
-    const { id } = useParams();
+    //const { id } = useParams();
 
     const isAddMode = !id;
     const [detail,setDetail] = useState("");
@@ -97,7 +97,7 @@ export const AddNotePage = () => {
     return (
     <div className='addNote-page'>
             <div className='addNote-content'>
-                <AddNoteForm isAddMode={isAddMode} id={id} error={error} handleOnChange={handleOnChange} handleSubmit={handleSubmit} detail={detail} subject={subject} handledBy={handledBy} date={date}/>
+                <AddNoteForm changeViewToList={changeViewToList} isAddMode={isAddMode} id={id} error={error} handleOnChange={handleOnChange} handleSubmit={handleSubmit} detail={detail} subject={subject} handledBy={handledBy} date={date}/>
             </div>
         </div>
     )

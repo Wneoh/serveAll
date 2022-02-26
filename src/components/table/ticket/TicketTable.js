@@ -2,12 +2,12 @@ import React from 'react'
 import { Container, Row, Table,Button,Col,Form } from 'react-bootstrap'
 import "./tickettable.style.css"
 
-export const TicketTable = ({data,handleOnChangeSearch}) => {
+export const TicketTable = ({data,handleOnChangeSearch,fetchDetail,changeViewToAdd}) => {
   return (
     <Container>
     <Row className="ticket-table">
       <Col sm={12} className="text-center pb-4" style={{position:"relative"}}>
-        <Button href="/newTicket">Add a New Ticket</Button>
+      <Button onClick={changeViewToAdd}>Add a New Ticket</Button>
         <Col style={{position:"absolute",top:0,right:10}}><Form.Control 
         placeholder='Search ...'
         type="text" 
@@ -23,7 +23,8 @@ export const TicketTable = ({data,handleOnChangeSearch}) => {
             <th>Client</th>
             <th>Handled By</th>
             <th>Subject</th>
-            <th>Date</th>
+            <th>Opened Date</th>
+            <th>Closed Date</th>
             <th>Status</th>
             <th>Action</th>
           </tr>
@@ -35,9 +36,10 @@ export const TicketTable = ({data,handleOnChangeSearch}) => {
                 <td>{row.client}</td>
                 <td>{row.handledBy}</td>
                 <td>{row.subject}</td>
-                <td>{row.date}</td>
+                <td>{row.openDate}</td>
+                <td>{ ( row.closeDate == null || row.closeDate == "")  && "-"}</td>
                 <td>{row.status}</td>
-                <td><Button href="/ticketDetail">Detail</Button></td>
+                <td><Button value={row.id} onClick={ () => fetchDetail(row.id)}>Detail</Button></td>
             </tr>
         )): 
             <tr>

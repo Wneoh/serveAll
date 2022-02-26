@@ -5,7 +5,8 @@
         "subject": "maintance",
         "handledBy": 1,
         "issue": "Having problem with ticket",
-        "date" : "01/10/2020",
+        "openDate" : "01/10/2020",
+        "closeDate" : "",
         "status" : "pending",
         "history": [
             {
@@ -30,7 +31,8 @@
         "client": "James",
         "subject": "maintance",
         "handledBy": 1,
-        "date" : "01/10/2020",
+        "openDate" : "01/10/2020",
+        "closeDate" : "",
         "issue": "Having problem with ticket",
         "status" : "pending",
         "history": [
@@ -56,24 +58,28 @@
         "client": "James",
         "subject": "maintance",
         "handledBy": 1,
-        "date" : "01/10/2020",
+        "openDate" : "01/10/2020",
+        "closeDate" : "",
         "issue": "Having problem with ticket",
         "status" : "pending",
         "history": [
             {
                 "date" : "20-10-10",
                 "response" : "mesage haha",
-                "responseBy" : "client"
+                "responseBy" : "client",
+                "sensitve" : false
             },
             {
                 "date" : "2021-01-21",
                 "response" : "ok haha",
-                "responseBy" : "staff"
+                "responseBy" : "staff",
+                "sensitve" : false
             },
             {
                 "date" : "2021-01-21",
                 "response" : "thanks haha",
-                "responseBy" : "client"
+                "responseBy" : "client",
+                "sensitve" : false
             }
         ]
     },
@@ -82,7 +88,8 @@
         "client": "James",
         "subject": "maintance",
         "handledBy": 1,
-        "date" : "2021-01-21",
+        "openDate" : "01/10/2020",
+        "closeDate" : "",
         "issue": "Having problem with ticket",
         "status" : "pending",
         "history": [

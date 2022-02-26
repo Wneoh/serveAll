@@ -1,14 +1,16 @@
 import React,{useEffect, useState} from "react";
-import { Button,Row,Col, Container } from "react-bootstrap";
 import { NoteTable } from "../../components/table/note/NoteTable";
 import notes from '../../assets/data/note.json'
 import { FilterForm } from "../../components/form/note/FilterForm";
 import Page from "../../components/Page";
+import { AddNotePage } from "./AddNotePage";
 
 const NotePage = () => {
 
     const [data,setData] = useState(notes);
+    const [id,setId] = useState('');
     const [searchStr,setSearchStr] = useState();
+    const [page,setPage] = useState('list');
 
     useEffect(() => {},[searchStr,data]);
 
@@ -19,6 +21,20 @@ const NotePage = () => {
             searchWithFilter(value);
         }
     }
+    
+    const fetchDetail = (id) => {
+        setPage('detail');
+        setId(id);
+    }
+
+    const changeViewToAdd = () => {
+        setPage("add");
+    }
+
+    const changeViewToList = () => {
+        setPage("list");
+    }
+
     const searchWithFilter = (value) => {
         const filteredSubjectTickets = notes.filter(row=>row.subject.toLowerCase().includes(value.toLowerCase()));
         const filteredDetailTickets = notes.filter(row=>row.detail.toLowerCase().includes(value.toLowerCase()));
@@ -34,10 +50,26 @@ const NotePage = () => {
     }
 
     return (
-        <Page title="Notes">
-                <FilterForm/>
-                <NoteTable data={data} handleOnChangeSearch={handleOnChangeSearch} />
-        </Page>
+        <div>
+        {(() => {
+            if (page == "list") {
+            return (
+                <Page title="Notes">
+                    <FilterForm/>
+                    <NoteTable data={data} handleOnChangeSearch={handleOnChangeSearch} fetchDetail={fetchDetail} changeViewToAdd={changeViewToAdd}/>
+                </Page>          
+            )
+            } else if (page == "detail") {
+            return (
+                <AddNotePage id={id} changeViewToList={changeViewToList}/>            
+            )
+            } else if (page == "add"){
+            return (
+                <AddNotePage changeViewToList={changeViewToList}/>            
+            )
+            }
+        })()}
+        </div>
     )  
 };
 

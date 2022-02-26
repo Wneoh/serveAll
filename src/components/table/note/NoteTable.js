@@ -2,12 +2,12 @@ import React from 'react'
 import { Container, Row, Table,Button,Col,Form } from 'react-bootstrap'
 import "./notetable.style.css"
 
-export const NoteTable = ({data,handleOnChangeSearch}) => {
+export const NoteTable = ({data,handleOnChangeSearch,fetchDetail,changeViewToAdd}) => {
   return (
     <Container>
     <Row className="note-table">
       <Col sm={12} className="text-center pb-4" style={{position:"relative"}}>
-        <Button href="/newNote">Add a New Note</Button>
+        <Button onClick={changeViewToAdd}>Add a New Note</Button>
         <Col style={{position:"absolute",top:0,right:10}}><Form.Control 
         placeholder='Search ...'
         type="text" 
@@ -33,7 +33,7 @@ export const NoteTable = ({data,handleOnChangeSearch}) => {
                 <td>{row.handledBy}</td>
                 <td>{row.subject}</td>
                 <td>{row.date}</td>
-                <td><Button href={"/noteDetail/"+row.id}>Detail</Button></td>
+                <td><Button value={row.id} onClick={ () => fetchDetail(row.id)}>Detail</Button></td>
             </tr>
         )): 
             <tr>

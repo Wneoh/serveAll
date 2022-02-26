@@ -1,6 +1,6 @@
 import React from 'react'
 import { Container,Row,Col,Form,Button } from 'react-bootstrap'
-export const AddTicketForm = ({subject,error,client,issue,date,handleOnChange,handleSubmit}) => {
+export const AddTicketForm = ({changeViewToList,subject,error,client,issue,date,handleOnChange,handleSubmit}) => {
   return (
     <Container>
           <Row>
@@ -71,7 +71,7 @@ export const AddTicketForm = ({subject,error,client,issue,date,handleOnChange,ha
                     </Form>
                     </Col>
                     <Col sm={12} >
-                        <a href="/ticket" className="pt-2">
+                        <a style={{cursor:"pointer"}} onClick={changeViewToList} className="pt-2">
                             <small>Back</small>
                         </a>
                     </Col>

@@ -6,7 +6,7 @@ import ChatHistory from '../../components/response/ChatHistory'
 import tickets from '../../assets/data/dummy-ticket.json'
 import RecordChat from '../../components/response/RecordChat'
 
-function TicketDetailPage() {
+function TicketDetailPage({changeViewToList}) {
 
   const fetchDetails = (id) => {
     // fetch detail on one id
@@ -20,7 +20,7 @@ function TicketDetailPage() {
     <Page title="Ticket Detail">
       <InfoBox/>
       <ChatHistory histories={tickets[0].history}/>
-      <RecordChat/>
+      <RecordChat changeViewToList={changeViewToList}/>
     </Page>
   )
 }

@@ -3,9 +3,7 @@ import { useParams } from 'react-router-dom';
 import contact from '../../assets/data/contact.json'
 import { AddContactForm } from '../../components/form/contact/AddContactForm';
 
-export const AddContactPage = () => {
-
-    const { id } = useParams();
+export const AddContactPage = ({id,changeViewToList}) => {
 
     const isAddMode = !id;
     const [number,setNumber] = useState("");
@@ -85,7 +83,7 @@ export const AddContactPage = () => {
     return (
     <div className='addNote-page'>
             <div className='addNote-content'>
-                <AddContactForm isAddMode={isAddMode} id={id} error={error} handleOnChange={handleOnChange} handleSubmit={handleSubmit} number={number} email={email} name={name}/>
+                <AddContactForm changeViewToList={changeViewToList} isAddMode={isAddMode} id={id} error={error} handleOnChange={handleOnChange} handleSubmit={handleSubmit} number={number} email={email} name={name}/>
             </div>
         </div>
     )

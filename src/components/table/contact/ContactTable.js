@@ -2,12 +2,12 @@ import React from 'react'
 import { Container, Row, Table,Button,Col,Form } from 'react-bootstrap'
 import "./contactTable.style.css"
 
-export const ContactTable = ({data,handleOnChangeSearch}) => {
+export const ContactTable = ({data,handleOnChangeSearch,fetchDetail,changeViewToAdd}) => {
   return (
     <Container>
     <Row className="contact-table">
       <Col sm={12} className="text-center pb-4" style={{position:"relative"}}>
-        <Button href="/newContact">Add a New Contact</Button>
+        <Button onClick={changeViewToAdd}>Add a New Contact</Button>
         <Col style={{position:"absolute",top:0,right:10}}><Form.Control 
         placeholder='Search ...'
         type="text" 
@@ -23,6 +23,7 @@ export const ContactTable = ({data,handleOnChangeSearch}) => {
             <th>Name</th>
             <th>Number</th>
             <th>Email</th>
+            <th>Updated</th>
             <th>Action</th>
           </tr>
         </thead>
@@ -33,7 +34,8 @@ export const ContactTable = ({data,handleOnChangeSearch}) => {
                 <td>{row.name}</td>
                 <td>{row.number}</td>
                 <td>{row.email}</td>
-                <td><Button href={"/contactDetail/"+row.id}>Detail</Button></td>
+                <td>{row.updated}</td>
+                <td><Button value={row.id} onClick={ () => fetchDetail(row.id)}>Detail</Button></td>
             </tr>
         )): 
             <tr>

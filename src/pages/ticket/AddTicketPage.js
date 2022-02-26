@@ -2,7 +2,7 @@ import React,{useState} from 'react';
 import { AddTicketForm } from '../../components/form/ticket/AddTicketForm';
 import "./addTicketPage.style.css";
 
-export const AddTicketPage = () => {
+export const AddTicketPage = ({changeViewToList}) => {
 
     const [issue,setIssue] = useState("");
     const [client,setClient] = useState("");
@@ -66,7 +66,7 @@ export const AddTicketPage = () => {
     return (
     <div className='addTicket-page'>
             <div className='addTicket-content'>
-                <AddTicketForm error={error} handleOnChange={handleOnChange} handleSubmit={handleSubmit} issue={issue} subject={subject} client={client} date={date}/>
+                <AddTicketForm changeViewToList={changeViewToList} error={error} handleOnChange={handleOnChange} handleSubmit={handleSubmit} issue={issue} subject={subject} client={client} date={date}/>
             </div>
         </div>
     )
