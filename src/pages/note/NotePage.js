@@ -1,25 +1,84 @@
 import React,{useEffect, useState} from "react";
 import { NoteTable } from "../../components/table/note/NoteTable";
-import notes from '../../assets/data/note.json'
 import { FilterForm } from "../../components/form/note/FilterForm";
 import Page from "../../components/Page";
 import { AddNotePage } from "./AddNotePage";
+import axios from 'axios'
+import { BASE_URL } from '../../config';
+import { Breadcrumb } from "react-bootstrap";
 
 const NotePage = () => {
 
-    const [data,setData] = useState(notes);
+    const [isLoading, setLoading] = useState(true);
+    const [filteredData,setfilterData] = useState('');
+    const [data,setData] = useState('');
     const [id,setId] = useState('');
-    const [searchStr,setSearchStr] = useState();
+    const [searchStr,setSearchStr] = useState('');
     const [page,setPage] = useState('list');
+    const [startDate,setStartDate] = useState('');
+    const [endDate,setEndDate] = useState('');
 
-    useEffect(() => {},[searchStr,data]);
+    
+    const resetFilter = () => {
+        setStartDate("");
+        setEndDate("");
+        setfilterData(data);
+    }
 
-    const handleOnChangeSearch = e => {
-        const {name,value} = e.target;
-        if (name == 'search'){
-            setSearchStr(value);
-            searchWithFilter(value);
+    const getAllNotes = async () => {
+        if (searchStr == '') {
+            const response = await axios.get(`${BASE_URL}/notes`);
+            setfilterData(response.data.data);
+            setData(response.data.data);
+            setLoading(false);
+        } else {
+            await searchWithFilter(searchStr);
         }
+    }
+
+    useEffect(() => {
+        getAllNotes();
+    },[searchStr]);
+
+    const handleOnChangeFilter = e => {
+        const {name,value} = e.target;
+
+        if(name=="startDate") {
+            setStartDate(value);
+        }
+
+        if(name=="endDate"){
+            setEndDate(value);
+        }
+    }
+
+    if (isLoading) {
+        return <div className="App">Loading...</div>;
+    }
+
+    const submitFilter = e => {
+        e.preventDefault();
+
+        if(new Date(startDate).getTime()>new Date(endDate).getTime()){
+            alert("StartDate cannot be later than endDate")
+            return;
+        }
+
+        if (!startDate || !endDate) {
+            alert("Please make sure there is startDate and endDate")
+            return;
+        }
+        const newFiltereddata = data.filter((row) => {
+            return new Date(row.date).getTime() >= new Date(startDate).getTime() &&
+                   new Date(row.date).getTime() <= new Date(endDate).getTime();
+        });
+
+        setfilterData(newFiltereddata);
+    }
+    const handleOnChangeSearch = e => {
+        const {value} = e.target;
+        setSearchStr(value);
+        searchWithFilter(value);
     }
     
     const fetchDetail = (id) => {
@@ -31,22 +90,45 @@ const NotePage = () => {
         setPage("add");
     }
 
-    const changeViewToList = () => {
+    const changeViewToList = async () => {
+        await getAllNotes();
         setPage("list");
     }
 
-    const searchWithFilter = (value) => {
-        const filteredSubjectTickets = notes.filter(row=>row.subject.toLowerCase().includes(value.toLowerCase()));
-        const filteredDetailTickets = notes.filter(row=>row.detail.toLowerCase().includes(value.toLowerCase()));
-        const filteredData = [...filteredDetailTickets,...filteredSubjectTickets];
+    const searchWithFilter = async (value) => {
 
-        const processedData = filteredData.filter((v,i,a)=>a.findIndex(t=>(t.id===v.id))===i)
+        if (value != '') {
+            const filteredSubjectTickets = data.filter(row=>row.subject.toLowerCase().includes(value.toLowerCase()));
+            const filteredDetailTickets = data.filter(row=>row.detail.toLowerCase().includes(value.toLowerCase()));
+            const filteredData = [...filteredDetailTickets,...filteredSubjectTickets];
 
-        setData(processedData);
+            const processedData = filteredData.filter((v,i,a)=>a.findIndex(t=>(t.id===v.id))===i)
+
+            setfilterData(processedData);
+        } else {
+            setfilterData(data);
+        }
     }
 
-    const fetchData = () => {
-        console.log("Fetch Data"); // fetch all data 
+    const remove = async (id) => {
+        try {
+            if (window.confirm('Are you sure you want to delete this note')) {
+                if (searchStr == '') {
+                    const response = await axios.post(`${BASE_URL}/note/delete`, {
+                        id : id
+                    });
+
+                    if (response.data.success == 1) {
+                        alert("Successfully remove note #"+id);
+                        await getAllNotes();
+                    } else {
+                        alert("Failed to remove note #"+id);
+                    }
+                }
+            }
+        } catch (error) {
+            alert("Failed to remove note #"+id);
+        } 
     }
 
     return (
@@ -55,8 +137,12 @@ const NotePage = () => {
             if (page == "list") {
             return (
                 <Page title="Notes">
-                    <FilterForm/>
-                    <NoteTable data={data} handleOnChangeSearch={handleOnChangeSearch} fetchDetail={fetchDetail} changeViewToAdd={changeViewToAdd}/>
+                    <Breadcrumb>
+                        <Breadcrumb.Item href="/">Home</Breadcrumb.Item>
+                        <Breadcrumb.Item active>Notes</Breadcrumb.Item>
+                    </Breadcrumb>
+                    <FilterForm startDate={startDate} endDate={endDate} resetFilter={resetFilter} submitFilter={submitFilter} handleOnChange={handleOnChangeFilter}/>
+                    <NoteTable remove={remove} data={filteredData} searchStr={searchStr} handleOnChangeSearch={handleOnChangeSearch} fetchDetail={fetchDetail} changeViewToAdd={changeViewToAdd}/>
                 </Page>          
             )
             } else if (page == "detail") {

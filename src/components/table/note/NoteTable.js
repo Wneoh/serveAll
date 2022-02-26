@@ -1,8 +1,9 @@
 import React from 'react'
 import { Container, Row, Table,Button,Col,Form } from 'react-bootstrap'
 import "./notetable.style.css"
+import moment from 'moment'
 
-export const NoteTable = ({data,handleOnChangeSearch,fetchDetail,changeViewToAdd}) => {
+export const NoteTable = ({searchStr,data,handleOnChangeSearch,fetchDetail,changeViewToAdd,remove}) => {
   return (
     <Container>
     <Row className="note-table">
@@ -12,6 +13,7 @@ export const NoteTable = ({data,handleOnChangeSearch,fetchDetail,changeViewToAdd
         placeholder='Search ...'
         type="text" 
         name="search"
+        value={searchStr}
         onChange={handleOnChangeSearch}
         /></Col>
       </Col>
@@ -19,7 +21,7 @@ export const NoteTable = ({data,handleOnChangeSearch,fetchDetail,changeViewToAdd
         <Table responsive striped bordered hover variant="white" style={{backgroundColor:"#ffffff",textAlign:"center"}} >
         <thead>
           <tr>
-            <th>Ticket #</th>
+            <th>Note #</th>
             <th>Handled By</th>
             <th>Subject</th>
             <th>Date</th>
@@ -29,11 +31,14 @@ export const NoteTable = ({data,handleOnChangeSearch,fetchDetail,changeViewToAdd
         <tbody>
         {data.length ? data.map((row,i) => (
             <tr key={i}>
-                <td>{row.id}</td>
+                <td>{i+1}</td>
                 <td>{row.handledBy}</td>
                 <td>{row.subject}</td>
-                <td>{row.date}</td>
-                <td><Button value={row.id} onClick={ () => fetchDetail(row.id)}>Detail</Button></td>
+                <td>{moment(row.date).format('YYYY-MM-DD')}</td>
+                <td>
+                  <Button className="m-1" value={row.id} onClick={ () => fetchDetail(row.id)}>Detail</Button>
+                  <Button className="m-1" variant="danger" value={row.id} onClick={ () => remove(row.id)}>Delete</Button>
+                </td>
             </tr>
         )): 
             <tr>

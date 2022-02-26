@@ -53,9 +53,9 @@ export const AddContactForm = ({ changeViewToList,isAddMode, id, name, error, nu
                             <Col sm={12} className="text-center">
                                 {
                                     isAddMode == true ?
-                                        <Button variant="primary" onClick={handleSubmit} type="submit"> Add New Contact</Button>
+                                        <Button variant="primary" type="submit" onClick={handleSubmit} type="submit"> Add New Contact</Button>
                                         :
-                                        <Button variant="primary" onClick={handleSubmit} type="submit"> Edit</Button>
+                                        <Button variant="primary" type="submit" onClick={handleSubmit} type="submit"> Edit</Button>
                                 }
                             </Col>
                         </Row>

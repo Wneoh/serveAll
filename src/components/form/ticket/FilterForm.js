@@ -1,59 +1,22 @@
 import React from 'react'
 import { Button, Col, Container, Form, Row } from 'react-bootstrap'
 import "./filterform.style.css";
-export const FilterForm = () => {
+export const FilterForm = ({status,endDate,startDate,handleOnChangeFilter,resetFilter,submitFilter}) => {
   return (
       <Container>
       <Row className="filter">
           <Col sm={12}>
                 <Form>
                     <Form.Group as={Row}>
-                    <Col sm={4}>
-                        <Row>
-                            <Form.Label column sm={4} >Client: </Form.Label>
-                            <Col sm={8}>
-                                <Form.Select name="client" aria-label="All">
-                                    <option value="-1">All</option>
-                                    <option value="1">Client 1</option>
-                                    <option value="2">Client 2</option>
-                                    <option value="3">Client 3</option>
-                                </Form.Select>
-                            </Col>  
-                        </Row>
-                    </Col>
-                    <Col sm={4}>
-                        <Row>
-                            <Form.Label column sm={4} >HandleBy: </Form.Label>
-                            <Col sm={8}>
-                                <Form.Select name="client" aria-label="All">
-                                    <option value="-1">All</option>
-                                    <option value="1">User 1</option>
-                                    <option value="2">User 2</option>
-                                    <option value="3">User 3</option>
-                                </Form.Select>
-                            </Col>  
-                        </Row>
-                    </Col>
-                    <Col sm={4}>
-                        <Row>
-                            <Form.Label column sm={4} >Status: </Form.Label>
-                            <Col sm={8}>
-                                <Form.Select name="client" aria-label="All">
-                                    <option value="-1">All</option>
-                                    <option value="1">Closed</option>
-                                    <option value="2">Pending</option>
-                                    <option value="3">New</option>
-                                </Form.Select>
-                            </Col>  
-                        </Row>
-                    </Col>
-                    <Col sm={8} className="pt-4">
+                    <Col sm={8} >
                         <Form.Group as={Row}>
                             <Form.Label column sm={2} >Start Date: </Form.Label>
                             <Col sm={4}>
                                 <Form.Control
                                     type="date"
                                     name="startDate"
+                                    value={startDate}
+                                    onChange={handleOnChangeFilter}
                                 />
                             </Col>  
                             <Form.Label column sm={2} >End Date: </Form.Label>
@@ -61,17 +24,35 @@ export const FilterForm = () => {
                                 <Form.Control
                                     type="date"
                                     name="endDate"
+                                    value={endDate}
+                                    onChange={handleOnChangeFilter}
                                 />
                             </Col>  
                         </Form.Group>
                     </Col>
-
+                    <Col sm={3}>
+                        <Row>
+                            <Form.Label column sm={4} >Status: </Form.Label>
+                            <Col sm={8}>
+                                <Form.Select 
+                                name="status" 
+                                value={status} 
+                                aria-label="All"
+                                onChange={handleOnChangeFilter}>
+                                    <option value="0">All</option>
+                                    <option value="1">New</option>
+                                    <option value="2">Processing</option>
+                                    <option value="3">Closed</option>
+                                </Form.Select>
+                            </Col>  
+                        </Row>
+                    </Col>
                     </Form.Group>
-                    <Form.Group style={{float:'right'}}>
-                        <Button className='btn-sm m-1'>
+                    <Form.Group style={{float:'right',paddingTop:'20px'}}>
+                        <Button onClick={resetFilter} className='btn-sm m-1'>
                                 Reset
                         </Button>
-                        <Button className='btn-sm m-1'>
+                        <Button onClick={submitFilter} className='btn-sm m-1'>
                                 Filter
                         </Button>
                     </Form.Group>

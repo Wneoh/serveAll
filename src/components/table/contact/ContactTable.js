@@ -1,8 +1,10 @@
 import React from 'react'
 import { Container, Row, Table,Button,Col,Form } from 'react-bootstrap'
 import "./contactTable.style.css"
+import moment from 'moment'
 
-export const ContactTable = ({data,handleOnChangeSearch,fetchDetail,changeViewToAdd}) => {
+
+export const ContactTable = ({searchStr,remove,data,handleOnChangeSearch,fetchDetail,changeViewToAdd}) => {
   return (
     <Container>
     <Row className="contact-table">
@@ -12,6 +14,7 @@ export const ContactTable = ({data,handleOnChangeSearch,fetchDetail,changeViewTo
         placeholder='Search ...'
         type="text" 
         name="search"
+        value={searchStr}
         onChange={handleOnChangeSearch}
         /></Col>
       </Col>
@@ -30,12 +33,15 @@ export const ContactTable = ({data,handleOnChangeSearch,fetchDetail,changeViewTo
         <tbody>
         {data.length ? data.map((row,i) => (
             <tr key={i}>
-                <td>{row.id}</td>
-                <td>{row.name}</td>
-                <td>{row.number}</td>
-                <td>{row.email}</td>
-                <td>{row.updated}</td>
-                <td><Button value={row.id} onClick={ () => fetchDetail(row.id)}>Detail</Button></td>
+                <td>{i+1}</td>
+                <td>{(row.name != null || row.name != undefined ) ? row.name : '-'}</td>
+                <td>{(row.phone != null || row.phone != undefined ) ? row.phone : '-'}</td>
+                <td>{(row.email != null || row.email != undefined) ? row.email : '-'}</td>
+                <td>{moment(row.updated).format('YYYY-MM-DD')}</td>
+                <td>
+                  <Button className="m-1" value={row.id} onClick={ () => fetchDetail(row.id)}>Detail</Button>
+                  <Button className="m-1" variant="danger" value={row.id} onClick={ () => remove(row.id)}>Delete</Button>
+                </td>         
             </tr>
         )): 
             <tr>

@@ -16,6 +16,7 @@ export const Header = () => {
                 <Nav.Link href="/">Dashboard</Nav.Link>
                 <Nav.Link href="/ticket">Ticket</Nav.Link>
                 <Nav.Link href="/note">Note</Nav.Link>
+                <Nav.Link href="/contact">Contact</Nav.Link>
                 <Nav.Link href="/login">Logout</Nav.Link>
             </Nav>
         </Navbar.Collapse>

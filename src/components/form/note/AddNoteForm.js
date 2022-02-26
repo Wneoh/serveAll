@@ -51,20 +51,21 @@ export const AddNoteForm = ({changeViewToList,isAddMode,id,subject,error,handled
                       <Row className='pb-4'>
                             <Form.Label column sm={4} >Handled By: </Form.Label>
                             <Col sm={8}>
-                                <Form.Select name="handledBy" required value={handledBy}  onChange={handleOnChange} aria-label="All">
-                                    <option value="1">Staff 1</option>
-                                    <option value="2">Staff 2</option>
-                                    <option value="3">Staff 3</option>
-                                </Form.Select>
+                                <Form.Control 
+                                name="handledBy" 
+                                required 
+                                value={handledBy}  
+                                onChange={handleOnChange}
+                            />
                             </Col>  
                         </Row>
                         <Row>
                             <Col sm={12} className="text-center">
                                 {
                                     isAddMode == true ? 
-                                        <Button variant="primary" onClick={handleSubmit} type="submit"> Add New Note</Button> 
+                                        <Button variant="primary" type="submit" onClick={handleSubmit} type="submit"> Add New Note</Button> 
                                     :
-                                        <Button variant="primary" onClick={handleSubmit} type="submit"> Edit</Button> 
+                                        <Button variant="primary" type="submit" onClick={handleSubmit} type="submit"> Edit</Button> 
                                 }
                             </Col>
                         </Row>

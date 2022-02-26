@@ -1,6 +1,7 @@
 import React from 'react'
 import { Container, Row, Table,Button,Col,Form } from 'react-bootstrap'
 import "./tickettable.style.css"
+import moment from 'moment'
 
 export const TicketTable = ({data,handleOnChangeSearch,fetchDetail,changeViewToAdd}) => {
   return (
@@ -36,9 +37,18 @@ export const TicketTable = ({data,handleOnChangeSearch,fetchDetail,changeViewToA
                 <td>{row.client}</td>
                 <td>{row.handledBy}</td>
                 <td>{row.subject}</td>
-                <td>{row.openDate}</td>
-                <td>{ ( row.closeDate == null || row.closeDate == "")  && "-"}</td>
-                <td>{row.status}</td>
+                <td>{ ( row.openDate == null || row.openDate == "")  ? "-" : moment(row.openDate).format('YYYY-MM-DD')}</td>
+                <td>{ ( row.closeDate == null || row.closeDate == "")  ? "-" : moment(row.closeDate).format('YYYY-MM-DD')}</td>
+                <td>{(() => {
+                  if( row.status == 1) {
+                    return(<span>New</span>);
+                  } else if (row.status == 2) {
+                    return(<span>Processing</span>);
+                  } else {
+                    return(<span>Closed</span>);
+                  }
+                })()}
+                </td>
                 <td><Button value={row.id} onClick={ () => fetchDetail(row.id)}>Detail</Button></td>
             </tr>
         )): 

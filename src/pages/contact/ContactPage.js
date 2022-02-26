@@ -1,24 +1,62 @@
 import React,{useEffect, useState} from "react";
 import { ContactTable } from "../../components/table/contact/ContactTable";
-import contact from '../../assets/data/contact.json'
 import Page from "../../components/Page";
 import { AddContactPage } from "./AddContactPage";
+import axios from 'axios'
+import { BASE_URL } from '../../config';
 
 const ContactPage = () => {
 
-    const [data,setData] = useState(contact);
+    const [isLoading, setLoading] = useState(true);
+    const [filteredData,setfilterData] = useState('');
+    const [data,setData] = useState('');
     const [id,setId] = useState('');
-    const [searchStr,setSearchStr] = useState();
+    const [searchStr,setSearchStr] = useState('');
     const [page,setPage] = useState('list');
+      
+    const remove = async (id) => {
+        try {
+            if (window.confirm('Are you sure you want to delete this contact')) {
+                if (searchStr == '') {
+                    const response = await axios.post(`${BASE_URL}/contact/delete`, {
+                        id : id
+                    });
 
-    useEffect(() => {},[searchStr,data]);
+                    if (response.data.success == 1) {
+                        alert("Successfully remove contact #"+id);
+                        await getAllContacts();
+                    } else {
+                        alert("Failed to remove contact #"+id);
+                    }
+                }
+            }
+        } catch (error) {
+            alert("Failed to remove note #"+id);
+        } 
+    }
 
+    const getAllContacts = async () => {
+        if (searchStr == '') {
+            const response = await axios.get(`${BASE_URL}/contacts`);
+            setfilterData(response.data.data);
+            setData(response.data.data);
+            setLoading(false);
+        } else {
+            await searchWithFilter(searchStr);
+        }
+    }
+
+    useEffect(() => {
+        getAllContacts();
+    },[searchStr]);
+
+    if (isLoading) {
+        return <div className="App">Loading...</div>;
+    }
     const handleOnChangeSearch = e => {
-        const {name,value} = e.target;
-        if (name == 'search'){
+        const {value} = e.target;
             setSearchStr(value);
             searchWithFilter(value);
-        }
     }
 
     const fetchDetail = (id) => {
@@ -35,18 +73,19 @@ const ContactPage = () => {
     }
 
     const searchWithFilter = (value) => {
-        const filteredEmail= contact.filter(row=>row.email.toLowerCase().includes(value.toLowerCase()));
-        const filteredNumber = contact.filter(row=>row.number.toLowerCase().includes(value.toLowerCase()));
-        const filteredName = contact.filter(row=>row.name.toLowerCase().includes(value.toLowerCase()));
-        const filteredData = [...filteredEmail,...filteredNumber,...filteredName];
-
-        const processedData = filteredData.filter((v,i,a)=>a.findIndex(t=>(t.id===v.id))===i)
-
-        setData(processedData);
-    }
-
-    const fetchData = () => {
-        console.log("Fetch Data"); // fetch all data 
+        if (value != '') {
+            const filteredEmail= data.filter(row=>row.email.toLowerCase().includes(value.toLowerCase()));
+            const filteredNumber = data.filter(row=>row.phone.toLowerCase().includes(value.toLowerCase()));
+            const filteredName = data.filter(row=>row.name.toLowerCase().includes(value.toLowerCase()));
+            const filteredData = [...filteredEmail,...filteredNumber,...filteredName];
+    
+            const processedData = filteredData.filter((v,i,a)=>a.findIndex(t=>(t.id===v.id))===i)
+    
+            setfilterData(processedData);
+        } else {
+            setfilterData(data);
+        }
+       
     }
 
     return (
@@ -55,7 +94,7 @@ const ContactPage = () => {
             if (page == "list") {
             return (
                 <Page title="Contact">
-                        <ContactTable data={data} handleOnChangeSearch={handleOnChangeSearch} fetchDetail={fetchDetail} changeViewToAdd={changeViewToAdd}/>
+                        <ContactTable searchStr={searchStr} remove={remove} data={filteredData} handleOnChangeSearch={handleOnChangeSearch} fetchDetail={fetchDetail} changeViewToAdd={changeViewToAdd}/>
                 </Page>            
             )
             } else if (page == "detail") {

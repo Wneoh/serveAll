@@ -1,6 +1,8 @@
 import React,{useState} from 'react';
 import { AddTicketForm } from '../../components/form/ticket/AddTicketForm';
 import "./addTicketPage.style.css";
+import { BASE_URL } from '../../config';
+import axios from 'axios';
 
 export const AddTicketPage = ({changeViewToList}) => {
 
@@ -8,7 +10,7 @@ export const AddTicketPage = ({changeViewToList}) => {
     const [client,setClient] = useState("");
     const [subject,setSubject] = useState("");
     const [date,setDate] = useState("");
-    const [status,setStatus] = useState("");
+    const [status,setStatus] = useState(1);
     const [error,setError] = useState("");
 
     const handleOnChange = e => {
@@ -31,7 +33,7 @@ export const AddTicketPage = ({changeViewToList}) => {
         }
     }
 
-    const handleSubmit = e => {
+    const handleSubmit = async e => {
         e.preventDefault();
 
         setError('');
@@ -53,12 +55,26 @@ export const AddTicketPage = ({changeViewToList}) => {
         }
 
         if (!error) {
-           alert("Good to go!")
-            // call api to login
+            //            const {client,subject,handledBy,issue,openDate,status} = req.body;
+            const response = await axios.post(`${BASE_URL}/ticket/add`, {
+                client: client,
+                subject: subject,
+                handledBy: "James",
+                openDate: date,
+                issue: issue,
+                status: status // 1 - new, 2 - processing, 3 - closed
+            });
+
+            if (response.data.success == 1) {
+                alert("Ticket has been added");
+                window.location.href = "/ticket";
+            }
+
             setClient('');
+            setSubject('');
             setDate('');
             setIssue('');
-            setSubject('');
+        
         }
         
     }

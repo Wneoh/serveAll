@@ -1,16 +1,17 @@
 import React,{useState,useEffect} from 'react'
-import { useParams } from 'react-router-dom';
-import contact from '../../assets/data/contact.json'
 import { AddContactForm } from '../../components/form/contact/AddContactForm';
+import axios from 'axios'
+import { BASE_URL } from '../../config';
 
 export const AddContactPage = ({id,changeViewToList}) => {
 
     const isAddMode = !id;
+    const [isLoading, setLoading] = useState(true);
+    const [loadingMsg,setLoadingMsg] = useState("loading");
     const [number,setNumber] = useState("");
     const [email,setEmail] = useState("");
     const [name,setName] = useState("");
     const [error,setError] = useState("");
-    const [found,setFound] = useState(true);
 
     const handleOnChange = e => {
         const {name,value} = e.target;
@@ -29,37 +30,48 @@ export const AddContactPage = ({id,changeViewToList}) => {
         }
     }
 
+    const fetchData = async (id) => {
+        try {
+            const response = await axios.get(`${BASE_URL}/contact`,{
+                params: {
+                    id: id,
+                },
+            });
+            if (response.data.success == 1) {
+                setNumber(response.data.data[0].phone);
+                setEmail(response.data.data[0].email);
+                setName(response.data.data[0].name);
+                setLoading(false);
+            }
+        } catch (error) {
+            setLoadingMsg("Something is wrong, please try again later..")
+        } 
+    }
+
     useEffect(() => {
         if (!isAddMode) {
            fetchData(id);
+        } else {
+            setLoading(false)
         }
-    }, [found]);
+    },[]);
 
-    const fetchData = async (id) => {
-        setFound(false);
-        contact.forEach(row => {
-            if (row.id == id) {
-                setNumber(row.number);
-                setName(row.name);
-                setEmail(row.email);
-                setFound(true);
-            }
-        });
-        /* Need to show error page
-        if (!found) {
-            var message = "Details Not found..."
-            await axios
-            .get("/error/" + message);
-        }*/
+    if (isLoading) {
+        return <div className="App">{loadingMsg}</div>;
     }
 
-    const handleSubmit = e => {
+    const handleSubmit = async e => {
         e.preventDefault();
 
         setError('');
         if (!email) {
             setError("Please enter email");
             return;
+        } else {
+            if (!/^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$/.test(email)) {
+                setError("Please enter a valid email");
+                return;
+            }
         }
         if (!name) {
             setError("Please enter name");
@@ -71,11 +83,39 @@ export const AddContactPage = ({id,changeViewToList}) => {
         }
 
         if (!error) {
-           alert("Good to go!")
-            // call api to login
-            setNumber('');
-            setName('');
-            setEmail('');
+            if (isAddMode) {
+                const response = await axios.post(`${BASE_URL}/contact/add`, {
+                    email: email,
+                    name: name,
+                    phone: number
+                });
+
+                if (response.data.success == 1) {
+                    alert("Contact has been added");
+                    window.location.href = "/contact";
+                }
+
+                setNumber('');
+                setName('');
+                setEmail('');
+            } else {
+                if (!id) {
+                    setLoadingMsg("No Id Found");
+                    setLoading(true);
+                }else {
+                    const response = await axios.post(`${BASE_URL}/contact/update`, {
+                        id:id,
+                        email: email,
+                        name: name,
+                        phone: number
+                    });
+    
+                    if (response.data.success == 1) {
+                        alert("Contact has been updated");
+                        window.location.href = "/contact";
+                    }
+                }
+            }
         }
         
     }
