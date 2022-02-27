@@ -1,8 +1,18 @@
 import React from 'react';
-import { Navbar,Nav,NavbarBrand } from 'react-bootstrap';
-import NavbarToggle from 'react-bootstrap/esm/NavbarToggle';
+import { Navbar,Nav } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
+import { logout } from '../../../api/UserApi';
 
 export const Header = () => {
+  const navigate = useNavigate();
+
+  const logOut = () => {
+    logout();
+    sessionStorage.removeItem("accessToken");
+    sessionStorage.removeItem("allServeUser");
+    localStorage.removeItem("allServe")
+    navigate("/login");
+  }
   return (
     <Navbar style={{backgroundColor:'#508bfc'}}
         collapseOnSelect
@@ -17,7 +27,7 @@ export const Header = () => {
                 <Nav.Link href="/ticket">Ticket</Nav.Link>
                 <Nav.Link href="/note">Note</Nav.Link>
                 <Nav.Link href="/contact">Contact</Nav.Link>
-                <Nav.Link href="/login">Logout</Nav.Link>
+                <Nav.Link href="#" onClick={logOut}>Logout</Nav.Link>
             </Nav>
         </Navbar.Collapse>
     </Navbar>

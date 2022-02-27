@@ -1,9 +1,9 @@
 import React from 'react'
-import { Col,Row,Container, Button,Form } from 'react-bootstrap'
+import { Container, Row, Col, Form, Button,Spinner } from 'react-bootstrap'
 import "./filterform.style.css";
 import moment from "moment";
 
-function InfoBox({client,subject,openDate,closeDate,issue,status,handleCloseTicket}) {
+function InfoBox({isLoading,client,subject,openDate,closeDate,issue,status,handleCloseTicket}) {
   return (
     <Container>
         <Row className='filter'>
@@ -36,7 +36,9 @@ function InfoBox({client,subject,openDate,closeDate,issue,status,handleCloseTick
             {
                 status !== 3 ?
                 <Form.Group style={{textAlign:'right'}}>
-                <Button className='btn-danger' onClick={handleCloseTicket}>Close Ticket</Button>
+                <Button className='btn-danger' onClick={handleCloseTicket}>
+                { isLoading ? <Spinner size="sm" variant="white" animation="border" /> : <span>Close Ticket</span>}
+                </Button>
                 </Form.Group>
                 : 
                 <Col sm={12} className="pt-3">

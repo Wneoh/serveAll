@@ -1,12 +1,14 @@
 import React,{useState} from 'react';
 import { AddTicketForm } from '../../components/form/ticket/AddTicketForm';
 import "./addTicketPage.style.css";
-import { BASE_URL } from '../../config';
-import axios from 'axios';
+import { Spinner,Container,Row } from 'react-bootstrap';
+import { addTicket } from '../../api/TicketApi';
 
-export const AddTicketPage = ({changeViewToList}) => {
+const AddTicketPage = ({changeViewToList}) => {
 
     const [issue,setIssue] = useState("");
+    const [isLoading, setLoading] = useState(false);
+    const [buttonLoad, setButtonLoad] = useState(false);
     const [client,setClient] = useState("");
     const [subject,setSubject] = useState("");
     const [date,setDate] = useState("");
@@ -35,37 +37,33 @@ export const AddTicketPage = ({changeViewToList}) => {
 
     const handleSubmit = async e => {
         e.preventDefault();
-
+        setButtonLoad(true);
         setError('');
         if (!client) {
             setError("Please enter client");
+            setButtonLoad(false);
             return;
         }
         if (!subject) {
             setError("Please enter subject");
+            setButtonLoad(false);
             return;
         }
         if (!date) {
             setError("Please select a date");
+            setButtonLoad(false);
             return;
         }
         if (!issue) {
             setError("Please describe issue");
+            setButtonLoad(false);
             return;
         }
 
         if (!error) {
-            //            const {client,subject,handledBy,issue,openDate,status} = req.body;
-            const response = await axios.post(`${BASE_URL}/ticket/add`, {
-                client: client,
-                subject: subject,
-                handledBy: "James",
-                openDate: date,
-                issue: issue,
-                status: status // 1 - new, 2 - processing, 3 - closed
-            });
-
-            if (response.data.success == 1) {
+            const userObject = JSON.parse(sessionStorage.getItem('allServeUser'));
+            const response = await addTicket(client,subject,userObject.name,date,issue,status);
+            if (response) {
                 alert("Ticket has been added");
                 window.location.href = "/ticket";
             }
@@ -76,14 +74,25 @@ export const AddTicketPage = ({changeViewToList}) => {
             setIssue('');
         
         }
-        
+        setButtonLoad(false);
     }
 
     return (
     <div className='addTicket-page'>
             <div className='addTicket-content'>
-                <AddTicketForm changeViewToList={changeViewToList} error={error} handleOnChange={handleOnChange} handleSubmit={handleSubmit} issue={issue} subject={subject} client={client} date={date}/>
+                {
+                isLoading ?
+                    <Container>
+                        <Row className="justify-content-center" style={{bottom:"50%"}}>
+                            <Spinner size="bg" variant="primary" animation="border" />
+                        </Row>
+                    </Container>
+                :
+                <AddTicketForm isLoading={buttonLoad} changeViewToList={changeViewToList} error={error} handleOnChange={handleOnChange} handleSubmit={handleSubmit} issue={issue} subject={subject} client={client} date={date}/>
+                }
             </div>
         </div>
     )
 }
+
+export default AddTicketPage

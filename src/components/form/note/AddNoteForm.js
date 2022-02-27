@@ -1,6 +1,6 @@
 import React from 'react'
-import { Container,Row,Col,Form,Button } from 'react-bootstrap'
-export const AddNoteForm = ({changeViewToList,isAddMode,id,subject,error,handledBy,detail,date,handleOnChange,handleSubmit}) => {
+import { Container, Row, Col, Form, Button,Spinner } from 'react-bootstrap'
+export const AddNoteForm = ({isLoading,changeViewToList,isAddMode,id,subject,error,handledBy,detail,date,handleOnChange,handleSubmit}) => {
   return (
     <Container>
           <Row>
@@ -62,10 +62,14 @@ export const AddNoteForm = ({changeViewToList,isAddMode,id,subject,error,handled
                         <Row>
                             <Col sm={12} className="text-center">
                                 {
-                                    isAddMode == true ? 
-                                        <Button variant="primary" type="submit" onClick={handleSubmit} type="submit"> Add New Note</Button> 
-                                    :
-                                        <Button variant="primary" type="submit" onClick={handleSubmit} type="submit"> Edit</Button> 
+                                    isAddMode == true ?
+                                        <Button variant="primary" type="submit" onClick={handleSubmit} type="submit"> 
+                                            { isLoading ? <Spinner size="sm" variant="white" animation="border" /> : <span>Add New Note</span>}
+                                        </Button>
+                                        :
+                                        <Button variant="primary" type="submit" onClick={handleSubmit} type="submit"> 
+                                        { isLoading ? <Spinner size="sm" variant="white" animation="border" /> : <span>Edit Note</span>}
+                                        </Button>
                                 }
                             </Col>
                         </Row>

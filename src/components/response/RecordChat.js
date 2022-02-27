@@ -1,6 +1,6 @@
 import React from 'react'
 import { Container, Row, Col, Form, Button } from 'react-bootstrap'
-const RecordChat = ({ error,reply,responseDate,sensitive,submitAsClient,submitAsStaff, handleOnChange }) => {
+const RecordChat = ({ error,reply,submitRecord,responseDate,sensitive,handleOnChange }) => {
     return (
         <Container>
             <Row className="pt-4">
@@ -43,10 +43,10 @@ const RecordChat = ({ error,reply,responseDate,sensitive,submitAsClient,submitAs
                             />
                         </Col>
                         <Col sm={4} style={{ textAlign: "right" }}>
-                            <Button type="submit" onClick={submitAsClient} className='btn-sm m-1'>
+                            <Button type="submit" onClick={(e) => submitRecord("client",e)} className='btn-sm m-1'>
                                 Record as Client
                             </Button>
-                            <Button type="submit" onClick={submitAsStaff} className='btn-sm m-1'>
+                            <Button type="submit" onClick={(e) => submitRecord("staff",e)}className='btn-sm m-1'>
                                 Record as Staff
                             </Button>
                         </Col>

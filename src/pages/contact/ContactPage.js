@@ -2,8 +2,8 @@ import React,{useEffect, useState} from "react";
 import { ContactTable } from "../../components/table/contact/ContactTable";
 import Page from "../../components/Page";
 import { AddContactPage } from "./AddContactPage";
-import axios from 'axios'
-import { BASE_URL } from '../../config';
+import { deleteContact, fetchContacts } from "../../api/ContactApi";
+import { Container,Row, Spinner } from "react-bootstrap";
 
 const ContactPage = () => {
 
@@ -13,46 +13,44 @@ const ContactPage = () => {
     const [id,setId] = useState('');
     const [searchStr,setSearchStr] = useState('');
     const [page,setPage] = useState('list');
-      
+
     const remove = async (id) => {
         try {
             if (window.confirm('Are you sure you want to delete this contact')) {
                 if (searchStr == '') {
-                    const response = await axios.post(`${BASE_URL}/contact/delete`, {
-                        id : id
-                    });
-
-                    if (response.data.success == 1) {
+                    setLoading(true);
+                    const status = await deleteContact(id)
+                    if (status) {
                         alert("Successfully remove contact #"+id);
                         await getAllContacts();
                     } else {
                         alert("Failed to remove contact #"+id);
                     }
+                    setLoading(false);
                 }
             }
         } catch (error) {
             alert("Failed to remove note #"+id);
+            setLoading(false);
         } 
     }
 
     const getAllContacts = async () => {
-        if (searchStr == '') {
-            const response = await axios.get(`${BASE_URL}/contacts`);
-            setfilterData(response.data.data);
-            setData(response.data.data);
-            setLoading(false);
-        } else {
-            await searchWithFilter(searchStr);
-        }
+            if (searchStr == '') {
+                const data = await fetchContacts();
+                setfilterData(data);
+                setData(data);
+                setLoading(false);
+            } else {
+                await searchWithFilter(searchStr);
+            }
+        
     }
 
     useEffect(() => {
         getAllContacts();
     },[searchStr]);
 
-    if (isLoading) {
-        return <div className="App">Loading...</div>;
-    }
     const handleOnChangeSearch = e => {
         const {value} = e.target;
             setSearchStr(value);
@@ -92,6 +90,15 @@ const ContactPage = () => {
         <div>
         {(() => {
             if (page == "list") {
+                if (isLoading) { 
+                    return ( 
+                    <Container>
+                        <Row className="justify-content-center" style={{bottom:"50%"}}>
+                            <Spinner size="bg" variant="primary" animation="border" />
+                        </Row>
+                    </Container>
+                    )
+                }
             return (
                 <Page title="Contact">
                         <ContactTable searchStr={searchStr} remove={remove} data={filteredData} handleOnChangeSearch={handleOnChangeSearch} fetchDetail={fetchDetail} changeViewToAdd={changeViewToAdd}/>

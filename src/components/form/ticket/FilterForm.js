@@ -1,7 +1,7 @@
 import React from 'react'
 import { Button, Col, Container, Form, Row } from 'react-bootstrap'
 import "./filterform.style.css";
-export const FilterForm = ({status,endDate,startDate,handleOnChangeFilter,resetFilter,submitFilter}) => {
+export const FilterForm = ({searchSensitive,status,endDate,startDate,handleOnChangeFilter,resetFilter,submitFilter}) => {
   return (
       <Container>
       <Row className="filter">
@@ -27,13 +27,13 @@ export const FilterForm = ({status,endDate,startDate,handleOnChangeFilter,resetF
                                     value={endDate}
                                     onChange={handleOnChangeFilter}
                                 />
-                            </Col>  
+                            </Col>
                         </Form.Group>
                     </Col>
                     <Col sm={3}>
                         <Row>
-                            <Form.Label column sm={4} >Status: </Form.Label>
-                            <Col sm={8}>
+                            <Form.Label column sm={3} >Status: </Form.Label>
+                            <Col sm={5}>
                                 <Form.Select 
                                 name="status" 
                                 value={status} 
@@ -41,10 +41,18 @@ export const FilterForm = ({status,endDate,startDate,handleOnChangeFilter,resetF
                                 onChange={handleOnChangeFilter}>
                                     <option value="0">All</option>
                                     <option value="1">New</option>
-                                    <option value="2">Processing</option>
                                     <option value="3">Closed</option>
                                 </Form.Select>
-                            </Col>  
+                            </Col> 
+                            <Col sm={4}>
+                            <Form.Check inline
+                                type="Checkbox"
+                                label="Sensitive"
+                                name="sensitive"
+                                checked={searchSensitive}
+                                onChange={handleOnChangeFilter}
+                            />
+                            </Col> 
                         </Row>
                     </Col>
                     </Form.Group>

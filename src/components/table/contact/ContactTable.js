@@ -31,7 +31,7 @@ export const ContactTable = ({searchStr,remove,data,handleOnChangeSearch,fetchDe
           </tr>
         </thead>
         <tbody>
-        {data.length ? data.map((row,i) => (
+        {data ? data.map((row,i) => (
             <tr key={i}>
                 <td>{i+1}</td>
                 <td>{(row.name != null || row.name != undefined ) ? row.name : '-'}</td>

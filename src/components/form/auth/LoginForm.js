@@ -1,7 +1,7 @@
 import React from 'react'
-import { Col, Container, Form, Row,Button } from 'react-bootstrap';
+import { Col, Container, Form, Row,Button, Spinner } from 'react-bootstrap';
 
-const LoginForm = ({handleOnChange,handleSubmit,error,email,password,changeView}) => {
+const LoginForm = ({isLoading,handleOnChange,handleSubmit,error,email,password,changeView}) => {
   return (
       <Container>
           <Row>
@@ -36,16 +36,11 @@ const LoginForm = ({handleOnChange,handleSubmit,error,email,password,changeView}
                         <Row>
                             <Col sm={12} className="text-center">
                                 <Button variant="primary" onClick={handleSubmit} type="submit">
-                                    Login
+                                { isLoading ? <Spinner size="sm" variant="white" animation="border" /> : <span>Login</span>}
                                 </Button>
                             </Col>
                         </Row>
                     </Form>
-                    </Col>
-                    <Col sm={12} >
-                        <a href="#!" className="pt-2" onClick={ () => changeView("forgetPassword")}>
-                            <small>Forget Password?</small>
-                        </a>
                     </Col>
                   
           </Row>

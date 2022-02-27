@@ -1,13 +1,13 @@
 import React,{useState,useEffect} from 'react'
 import { AddContactForm } from '../../components/form/contact/AddContactForm';
-import axios from 'axios'
-import { BASE_URL } from '../../config';
+import { Spinner,Container,Row } from 'react-bootstrap';
+import { addContact, getContact, updateContact } from '../../api/ContactApi';
 
 export const AddContactPage = ({id,changeViewToList}) => {
 
     const isAddMode = !id;
     const [isLoading, setLoading] = useState(true);
-    const [loadingMsg,setLoadingMsg] = useState("loading");
+    const [buttonLoad, setButtonLoad] = useState(false);
     const [number,setNumber] = useState("");
     const [email,setEmail] = useState("");
     const [name,setName] = useState("");
@@ -32,19 +32,16 @@ export const AddContactPage = ({id,changeViewToList}) => {
 
     const fetchData = async (id) => {
         try {
-            const response = await axios.get(`${BASE_URL}/contact`,{
-                params: {
-                    id: id,
-                },
-            });
-            if (response.data.success == 1) {
-                setNumber(response.data.data[0].phone);
-                setEmail(response.data.data[0].email);
-                setName(response.data.data[0].name);
+            const resp = await getContact(id);
+            if (resp.length != 0) {
+                setNumber(resp.data[0].phone);
+                setEmail(resp.data[0].email);
+                setName(resp.data[0].name);
                 setLoading(false);
             }
+
         } catch (error) {
-            setLoadingMsg("Something is wrong, please try again later..")
+            setLoading(false);
         } 
     }
 
@@ -56,43 +53,41 @@ export const AddContactPage = ({id,changeViewToList}) => {
         }
     },[]);
 
-    if (isLoading) {
-        return <div className="App">{loadingMsg}</div>;
-    }
-
     const handleSubmit = async e => {
         e.preventDefault();
-
+        setButtonLoad(true);
         setError('');
         if (!email) {
             setError("Please enter email");
+            setButtonLoad(false);
             return;
         } else {
             if (!/^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$/.test(email)) {
                 setError("Please enter a valid email");
+                setButtonLoad(false);
                 return;
             }
         }
         if (!name) {
             setError("Please enter name");
+            setButtonLoad(false);
             return;
         }
         if (!number) {
             setError("Please enter your phone");
+            setButtonLoad(false);
             return;
         }
 
         if (!error) {
             if (isAddMode) {
-                const response = await axios.post(`${BASE_URL}/contact/add`, {
-                    email: email,
-                    name: name,
-                    phone: number
-                });
+                const response = await addContact(email,name,number);
 
-                if (response.data.success == 1) {
+                if (response) {
                     alert("Contact has been added");
                     window.location.href = "/contact";
+                } else {
+                    alert("Contact could not be added...");
                 }
 
                 setNumber('');
@@ -100,30 +95,35 @@ export const AddContactPage = ({id,changeViewToList}) => {
                 setEmail('');
             } else {
                 if (!id) {
-                    setLoadingMsg("No Id Found");
                     setLoading(true);
                 }else {
-                    const response = await axios.post(`${BASE_URL}/contact/update`, {
-                        id:id,
-                        email: email,
-                        name: name,
-                        phone: number
-                    });
+                    const response = await updateContact(id,email,name,number)
     
-                    if (response.data.success == 1) {
+                    if (response) {
                         alert("Contact has been updated");
                         window.location.href = "/contact";
+                    } else {
+                        alert("Contact could not be added...");
                     }
                 }
             }
+            setButtonLoad(false);
         }
         
     }
 
     return (
     <div className='addNote-page'>
-            <div className='addNote-content'>
-                <AddContactForm changeViewToList={changeViewToList} isAddMode={isAddMode} id={id} error={error} handleOnChange={handleOnChange} handleSubmit={handleSubmit} number={number} email={email} name={name}/>
+            <div className='addNote-content'>{
+                isLoading ?
+                    <Container>
+                        <Row className="justify-content-center" style={{bottom:"50%"}}>
+                            <Spinner size="bg" variant="primary" animation="border" />
+                        </Row>
+                    </Container>
+                :
+                <AddContactForm isLoading={buttonLoad} changeViewToList={changeViewToList} isAddMode={isAddMode} id={id} error={error} handleOnChange={handleOnChange} handleSubmit={handleSubmit} number={number} email={email} name={name}/>
+                }
             </div>
         </div>
     )

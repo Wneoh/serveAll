@@ -3,18 +3,21 @@ import { Container, Row, Table,Button,Col,Form } from 'react-bootstrap'
 import "./tickettable.style.css"
 import moment from 'moment'
 
-export const TicketTable = ({data,handleOnChangeSearch,fetchDetail,changeViewToAdd}) => {
+export const TicketTable = ({data,handleOnChangeSearch,fetchDetail,changeViewToAdd,searchSensitive,searchStr}) => {
   return (
     <Container>
     <Row className="ticket-table">
-      <Col sm={12} className="text-center pb-4" style={{position:"relative"}}>
+      <Col sm={12} className="text-center pb-5" style={{position:"relative"}}>
       <Button onClick={changeViewToAdd}>Add a New Ticket</Button>
-        <Col style={{position:"absolute",top:0,right:10}}><Form.Control 
-        placeholder='Search ...'
-        type="text" 
-        name="search"
-        onChange={handleOnChangeSearch}
-        /></Col>
+        <Col style={{position:"absolute",top:0,right:10}}>
+          <Form.Control 
+          placeholder='Search ...'
+          type="text" 
+          name="search"
+          onChange={handleOnChangeSearch}
+          value={searchStr}
+          />
+          </Col>
       </Col>
       <Col sm={12}>
         <Table responsive striped bordered hover variant="white" style={{backgroundColor:"#ffffff",textAlign:"center"}} >
@@ -31,7 +34,7 @@ export const TicketTable = ({data,handleOnChangeSearch,fetchDetail,changeViewToA
           </tr>
         </thead>
         <tbody>
-        {data.length ? data.map((row,i) => (
+        {data ? data.map((row,i) => (
             <tr key={i}>
                 <td>{row.id}</td>
                 <td>{row.client}</td>

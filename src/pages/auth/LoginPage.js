@@ -1,14 +1,19 @@
-import React,{useState} from 'react';
-import { Container, Row } from 'react-bootstrap';
+import React,{useState,useEffect} from 'react';
+import { useNavigate } from 'react-router-dom';
 import LoginForm from '../../components/form/auth/LoginForm';
 import ResetPasswordForm from '../../components/form/auth/ResetPasswordForm';
 import "./login.style.css";
+import { useDispatch,useSelector } from 'react-redux';
+import { login } from '../../api/UserApi';
+import {loginPending,loginSuccess,loginFail } from "../../slices/loginSlice";
 
 const LoginPage = () => {
 
+    const {isLoading,isAuth,error} = useSelector(state=>state.auth)
+    const dispatch = useDispatch();
     const [email,setEmail] = useState("");
     const [password,setPassword] = useState("");
-    const [error,setError] = useState("");
+    const navigate = useNavigate();
 
     const [form, setForm] = useState('login');
 
@@ -22,51 +27,51 @@ const LoginPage = () => {
     }
 
     const handleForm = (form) => {
-        setError('');
+        dispatch(loginFail(""));
         setForm(form);
     }
-
-    const handleSubmit = e => {
+    
+    const handleSubmit = async e => {
         e.preventDefault();
-        setError('');
-        if ( !email) {
-            setError("Please enter email");
+        dispatch(loginPending());
+
+        if (!email) {
+            dispatch(loginFail("Please enter email"));
             return;
         } else {
             if (!/^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$/.test(email)) {
-                setError("Please enter a valid email");
+                dispatch(loginFail("Please enter a valid email"));
                 return;
             }
         }
 
         if (form !== 'forgetPassword') {
             if (!password) {
-                setError("Please enter password");
+                dispatch(loginFail("Please enter password"));
                 return;
             }
         }
 
-        if (!error) {
             if (form == 'forgetPassword') {
                 alert("Email has been sent to reset Password!");
             } 
             if (form == 'login') {
-                alert("Login!");
-            }
-            // call api to login
+                const status = await login(email,password);
 
-            setForm('login');
-            setEmail('');
-            setPassword('');
-            setEmail('');
-        }
+                if (status) {
+                    dispatch(loginSuccess(""));
+                    navigate("/");
+                } else {
+                    dispatch(loginFail("Wrong Email/Password"));
+                }
+            }
         
     }
 
     return (
         <div className='login-page'>
             <div className='login-content'>
-                {form == 'login' && <LoginForm handleSubmit={handleSubmit} handleOnChange={handleOnChange} error={error} email={email} password={password} changeView={handleForm}/>}
+                {form == 'login' && <LoginForm isLoading={isLoading} handleSubmit={handleSubmit} handleOnChange={handleOnChange} error={error} email={email} password={password} changeView={handleForm}/>}
                     
                 {form == 'forgetPassword' && <ResetPasswordForm handleSubmit={handleSubmit} handleOnChange={handleOnChange} error={error} email={email} changeView={handleForm}/> }
             </div>
@@ -74,4 +79,4 @@ const LoginPage = () => {
     )
 }
 
-export default LoginPage;
+export default (LoginPage)

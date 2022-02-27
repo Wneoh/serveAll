@@ -3,9 +3,9 @@ import { NoteTable } from "../../components/table/note/NoteTable";
 import { FilterForm } from "../../components/form/note/FilterForm";
 import Page from "../../components/Page";
 import { AddNotePage } from "./AddNotePage";
-import axios from 'axios'
-import { BASE_URL } from '../../config';
 import { Breadcrumb } from "react-bootstrap";
+import { deleteNote, fetchNotes } from "../../api/NoteApi";
+import { Container,Row, Spinner } from "react-bootstrap";
 
 const NotePage = () => {
 
@@ -27,10 +27,11 @@ const NotePage = () => {
 
     const getAllNotes = async () => {
         if (searchStr == '') {
-            const response = await axios.get(`${BASE_URL}/notes`);
-            setfilterData(response.data.data);
-            setData(response.data.data);
+            const data = await fetchNotes();
+            setfilterData(data);
+            setData(data);
             setLoading(false);
+           
         } else {
             await searchWithFilter(searchStr);
         }
@@ -50,10 +51,6 @@ const NotePage = () => {
         if(name=="endDate"){
             setEndDate(value);
         }
-    }
-
-    if (isLoading) {
-        return <div className="App">Loading...</div>;
     }
 
     const submitFilter = e => {
@@ -114,20 +111,21 @@ const NotePage = () => {
         try {
             if (window.confirm('Are you sure you want to delete this note')) {
                 if (searchStr == '') {
-                    const response = await axios.post(`${BASE_URL}/note/delete`, {
-                        id : id
-                    });
-
-                    if (response.data.success == 1) {
+                    setLoading(true);
+                    const status = await deleteNote(id);
+            
+                    if (status) {
                         alert("Successfully remove note #"+id);
                         await getAllNotes();
                     } else {
                         alert("Failed to remove note #"+id);
                     }
+                    setLoading(false);
                 }
             }
         } catch (error) {
             alert("Failed to remove note #"+id);
+            setLoading(false);
         } 
     }
 
@@ -135,6 +133,15 @@ const NotePage = () => {
         <div>
         {(() => {
             if (page == "list") {
+                if (isLoading) { 
+                    return ( 
+                    <Container>
+                        <Row className="justify-content-center" style={{bottom:"50%"}}>
+                            <Spinner size="bg" variant="primary" animation="border" />
+                        </Row>
+                    </Container>
+                    )
+                }
             return (
                 <Page title="Notes">
                     <Breadcrumb>

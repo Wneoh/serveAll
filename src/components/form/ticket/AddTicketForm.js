@@ -1,6 +1,6 @@
 import React from 'react'
-import { Container,Row,Col,Form,Button } from 'react-bootstrap'
-export const AddTicketForm = ({changeViewToList,subject,error,client,issue,date,handleOnChange,handleSubmit}) => {
+import { Container, Row, Col, Form, Button,Spinner } from 'react-bootstrap'
+export const AddTicketForm = ({isLoading,changeViewToList,subject,error,client,issue,date,handleOnChange,handleSubmit}) => {
   return (
     <Container>
           <Row>
@@ -63,8 +63,8 @@ export const AddTicketForm = ({changeViewToList,subject,error,client,issue,date,
                       </Form.Group>
                         <Row>
                             <Col sm={12} className="text-center">
-                                <Button variant="primary" onClick={handleSubmit} type="submit">
-                                    Add New Ticket
+                                <Button variant="primary" type="submit" onClick={handleSubmit} type="submit"> 
+                                            { isLoading ? <Spinner size="sm" variant="white" animation="border" /> : <span>Add New Ticket</span>}
                                 </Button>
                             </Col>
                         </Row>

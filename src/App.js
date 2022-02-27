@@ -11,23 +11,41 @@ import { DefaultLayout } from './components/layout/DefaultLayout';
 import NotePage from './pages/note/NotePage';
 import NotFoundPage from './pages/NotFoundPage';
 import ContactPage from './pages/contact/ContactPage';
+import PrivateRoute from './components/route/PrivateRoute';
+import { Router } from 'react-router-dom';
 
 function App() {
   return (
-    <div>
-      <BrowserRouter>
-          <Routes>
-            <Route exact path="/" element={<DefaultLayout><DashboardPage/></DefaultLayout>} />
-            <Route exact path="/note" element={<DefaultLayout><NotePage/></DefaultLayout>} />
-            <Route exact path="/ticket" element={<DefaultLayout><TicketPage/></DefaultLayout>} />
-            <Route exact path="/contact" element={<DefaultLayout><ContactPage/></DefaultLayout>} />
-            <Route exact path="/login" element={<LoginPage/>} />
-            <Route exact path="/error/:message" element={<NotFoundPage/>} />
-            <Route exact path="*" element={<NotFoundPage/>} />
-          </Routes>       
+    <BrowserRouter>
+      <Routes>
+        <Route exact path="/login" element={<LoginPage/>}/>
+        <Route exact path="/" element={
+          <PrivateRoute>
+            <DashboardPage/>
+          </PrivateRoute>
+        }/>
+        <Route exact path="/note" element={
+          <PrivateRoute>
+            <NotePage/>
+          </PrivateRoute>
+        }/>
+        <Route exact path="/ticket" element={
+          <PrivateRoute>
+            <TicketPage/>
+          </PrivateRoute>
+        }/>
+        <Route exact path="/contact" element={
+          <PrivateRoute>
+            <ContactPage/>
+          </PrivateRoute>
+        }/>
+        <Route path="*" element={
+          <NotFoundPage/>
+        }/>
+      </Routes>
       </BrowserRouter>
-    </div>
-  );
+);
 }
+
 
 export default App;

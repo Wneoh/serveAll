@@ -1,6 +1,6 @@
 import React from 'react'
-import { Container, Row, Col, Form, Button } from 'react-bootstrap'
-export const AddContactForm = ({ changeViewToList,isAddMode, id, name, error, number, email, handleOnChange, handleSubmit }) => {
+import { Container, Row, Col, Form, Button,Spinner } from 'react-bootstrap'
+export const AddContactForm = ({ isLoading,changeViewToList,isAddMode, id, name, error, number, email, handleOnChange, handleSubmit }) => {
     return (
         <Container>
             <Row>
@@ -53,9 +53,13 @@ export const AddContactForm = ({ changeViewToList,isAddMode, id, name, error, nu
                             <Col sm={12} className="text-center">
                                 {
                                     isAddMode == true ?
-                                        <Button variant="primary" type="submit" onClick={handleSubmit} type="submit"> Add New Contact</Button>
+                                        <Button variant="primary" type="submit" onClick={handleSubmit} type="submit"> 
+                                            { isLoading ? <Spinner size="sm" variant="white" animation="border" /> : <span>Add New Contact</span>}
+                                        </Button>
                                         :
-                                        <Button variant="primary" type="submit" onClick={handleSubmit} type="submit"> Edit</Button>
+                                        <Button variant="primary" type="submit" onClick={handleSubmit} type="submit"> 
+                                        { isLoading ? <Spinner size="sm" variant="white" animation="border" /> : <span>Edit Contact</span>}
+                                        </Button>
                                 }
                             </Col>
                         </Row>
